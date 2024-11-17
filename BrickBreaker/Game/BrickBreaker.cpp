@@ -4,16 +4,17 @@
 // Date: 02/11/2024
 //
 
+#include "BrickBreaker.h"
+#include "2D/Entity2D.h"
 #include "2D/ResourceManager.h"
 #include "2D/Rendering/SpriteRenderer.h"
-#include "BrickBreaker.h"
 
 using Engine2D::ResourceManager;
 using Engine2D::Rendering::SpriteRenderer;
 
 BrickBreaker::BrickBreaker(const int16 width, const int16 height)
-: Game2D(width, height, "Space Invaders"), levelIndex(0),
-  background(nullptr), player(nullptr) {}
+  : Game2D(width, height, "Space Invaders"), levelIndex(0),
+    background(nullptr), player(nullptr) {}
 
 void BrickBreaker::Initialize() {
   // load textures
@@ -34,11 +35,15 @@ void BrickBreaker::Initialize() {
 
   // Load level 0 and unload all the others
   ChangeLevel(0);
+
+  Engine::Input::Keyboard::ESCAPE += [this](const Engine::Input::KeyboardContext ctx) {
+    Close(ctx);
+  };
 }
 
 void BrickBreaker::ChangeLevel(const int newLevel) {
   for (int i = 0; i < this->levels.size(); ++i)
-    for (const auto brick : this->levels[i].bricks)
+    for (const auto brick: this->levels[i].bricks)
       brick->SetActive(i == newLevel);
   this->levelIndex = newLevel;
 }

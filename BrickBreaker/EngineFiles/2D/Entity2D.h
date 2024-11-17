@@ -12,6 +12,8 @@
 #include "2D/Components/Transform2D.h"
 #include "Rendering/Texture2D.h"
 
+using Engine2D::Rendering::Texture2D;
+
 namespace Engine2D {
   class Game2D;
 
@@ -23,6 +25,7 @@ namespace Engine2D {
    * Each entity can have a position, rotation, and scale, as well as a renderer and a parent entity.
    */
   class Entity2D {
+    friend class Engine2D::Game2D;
     public:
       /** The name of the entity. */
       std::string name;
@@ -31,7 +34,7 @@ namespace Engine2D {
       /** The transform representing the position, rotation, and scale of the entity in the game world. */
       Transform2D transform;
       /** The texture of this entity */
-      Rendering::Texture2D *texture;
+      Texture2D *texture;
       /** The color of the texture */
       glm::vec3 *textureColor;
 
@@ -41,7 +44,7 @@ namespace Engine2D {
        * @param parent The parent of this entity (optional)
        * @param texture The texture of this entity (optional)
        */
-      explicit Entity2D(std::string name, Entity2D *parent = nullptr, Rendering::Texture2D *texture = nullptr);
+      explicit Entity2D(std::string name, Entity2D *parent = nullptr, Texture2D *texture = nullptr);
       /** Equality operator that checks if the current entity is the same as the given entity */
       bool operator==(const Entity2D &entity) const;
 
@@ -50,8 +53,6 @@ namespace Engine2D {
 
       /** Called during initialization, allowing derived classes to customize behavior. */
       virtual void Initialize() {}
-      /** Called when the game is processing the user input's, allowing derived classes to customize behavior. */
-      virtual void ProcessInput() {}
       /** Called when the game is updating, allowing derived classes to customize behavior. */
       virtual void Update() {}
       /** Called when the entity is removed from the game or when the game quits, allowing derived classes to customize behavior.*/
@@ -69,8 +70,6 @@ namespace Engine2D {
        */
       void SetActive(bool newState);
       [[nodiscard]] bool IsActive() const;
-
-      friend class Engine2D::Game2D;
     private:
       /** If the current entity is active in the scene, if it is not, it will not be updated and rendered */
       bool active = true;
@@ -79,8 +78,6 @@ namespace Engine2D {
 
       /** Initializes the entity, setting its parent to the main parent if none is set. */
       void initialize();
-      /** Called when the game is processing the user input's, allowing derived classes to customize behavior. */
-      void processInput();
       /** Called when the game is updating, allowing derived classes to customize behavior. */
       void update();
       /** Cleans up resources when the game ends */
