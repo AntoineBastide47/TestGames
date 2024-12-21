@@ -9,7 +9,7 @@ project(BrickBreaker)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
 
 # Find required packages
 find_package(OpenGL REQUIRED)
@@ -40,12 +40,6 @@ add_executable(${PROJECT_NAME} main.cpp
     GameCode/Ball.h
 )
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-  add_compile_options(-frtti)
-elseif(MSVC)
-  add_compile_options(/GR)
-endif()
-
 # Depending on the OS of the user, link the libraries correctly and find the engine library
 if (APPLE)
   file(GLOB ENGINE_LIB EngineFiles/[a-zA-Z0-9]*-[0-9]*.[0-9]*.[0-9]*.a)
@@ -64,7 +58,7 @@ endif ()
 
 # Make sure the engine static library is present
 if (NOT ENGINE_LIB)
-  message(FATAL_ERROR "The Game Engine's 2D static library was not found in the folder EngineFiles. To copy it from it's current location to the EngineFiles, please run this command in your terminal: make refresh")
+  message(FATAL_ERROR "The Game Engine's 2D static library was not found in the folder EngineFiles. Make sure you built the engine using `make build` in the engine's file location before creating your project.")
 endif ()
 
 # Link the libraries needed to make the engine run
@@ -109,7 +103,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
   set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
   # Add stripping for Release builds
-  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_STRIP} $<TARGET_FILE:${PROJECT_NAME}>)
+  #add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_STRIP} $<TARGET_FILE:${PROJECT_NAME}>)
 endif()
 
 ########################################################################################################################

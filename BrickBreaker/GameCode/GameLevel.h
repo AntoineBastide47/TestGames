@@ -7,14 +7,12 @@
 #ifndef GAME_LEVEL_H
 #define GAME_LEVEL_H
 
-#include <vector>
-
 #include "Brick.h"
 
 class GameLevel {
   public:
     // level state
-    std::vector<Brick *> bricks;
+    std::unordered_set<std::shared_ptr<Brick>> bricks;
     // constructor
     explicit GameLevel(int index);
     // check if the level is completed (all non-solid tiles are destroyed)

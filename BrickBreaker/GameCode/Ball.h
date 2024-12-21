@@ -12,14 +12,14 @@
 
 class Ball : public Engine2D::Entity2D {
   public:
-    bool stuck;
-    static Engine2D::Vector2 INITIAL_VELOCITY;
-    Engine2D::Physics::Rigidbody2D *rigidbody;
+    bool stuck = true;
+    static Engine2D::Vector2f INITIAL_VELOCITY;
+    std::shared_ptr<Engine2D::Physics::Rigidbody2D> rigidbody;
 
-    Ball(const std::string &name, Texture2D *sprite);
+    explicit Ball(const std::string &name) : Entity2D(name) {}
 
     void Initialize() override;
-    void OnCollision(Engine2D::Physics::Rigidbody2D *collider) override;
+    void OnCollision(const std::shared_ptr<Engine2D::Physics::Rigidbody2D> &collider) override;
 
     void Reset();
 };

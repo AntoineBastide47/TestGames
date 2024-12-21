@@ -8,24 +8,25 @@
 #include <2D/Entity2D.h>
 #include <2D/ResourceManager.h>
 #include <Input/Keyboard.h>
-#include <Common/Macros.h>
+#include <Common/Settings.h>
 
 #include "BrickBreaker.h"
 
 using Engine2D::ResourceManager;
 
-Paddle *BrickBreaker::paddle{};
-Ball *BrickBreaker::ball{};
-std::vector<GameLevel> BrickBreaker::levels{};
+std::unordered_map<int, GameLevel> BrickBreaker::levels{};
 int BrickBreaker::levelIndex = 0;
 
-BrickBreaker::BrickBreaker(const int width, const int height)
-  : Game2D(width, height, "Brick Breaker"), background("background") {}
+std::shared_ptr<Paddle> BrickBreaker::paddle{};
+std::shared_ptr<Ball> BrickBreaker::ball{};
+std::shared_ptr<Background> BrickBreaker::background{};
 
-BrickBreaker::~BrickBreaker() {
-  SAFE_DELETE(paddle);
-  SAFE_DELETE(ball);
+void Background::Initialize() {
+  SetTexture(ResourceManager::GetTexture("background"));
+  transform.scale = Engine2D::Vector2(BrickBreaker::ViewportWidth(), BrickBreaker::ViewportHeight());
 }
+
+BrickBreaker::BrickBreaker(const int width, const int height) : Game2D(width, height, "Brick Breaker") {}
 
 void BrickBreaker::Initialize() {
   // load textures
@@ -35,20 +36,21 @@ void BrickBreaker::Initialize() {
   ResourceManager::LoadTexture("Assets/Textures/paddle.png", true, "paddle");
   ResourceManager::LoadTexture("Assets/Textures/awesomeface.png", true, "face");
 
+  Engine::Settings::Physics.SetFrictionEnabled(false);
+
   // Create all the entities
-  background.texture = ResourceManager::GetTexture("background");
-  background.transform.scale = Engine2D::Vector2(ViewportWidth(), ViewportHeight());
-  paddle = new Paddle("paddle", nullptr, ResourceManager::GetTexture("paddle"));
+  AddEntity<Background>("background");
+  AddEntity<Paddle>("paddle");
+  AddEntity<Ball>("ball");
 
   // Load the game levels
-  levels.emplace_back(0);
-  levels.emplace_back(1);
-  levels.emplace_back(2);
-  levels.emplace_back(3);
+  levels.emplace(0, GameLevel(0));
+  levels.emplace(1, GameLevel(1));
+  levels.emplace(2, GameLevel(2));
+  levels.emplace(3, GameLevel(3));
 
   // Load level 0 and unload all the others
   ChangeLevel(0);
-  ball = new Ball("ball", ResourceManager::GetTexture("face"));
 
   Engine::Input::Keyboard::ESCAPE += [this](const Engine::Input::KeyboardAndMouseContext ctx) {
     Close(ctx);
@@ -56,9 +58,9 @@ void BrickBreaker::Initialize() {
 }
 
 void BrickBreaker::ChangeLevel(const int newLevel) {
-  for (int i = 0; i < levels.size(); ++i)
-    for (const auto brick: levels[i].bricks)
-      brick->active = i == newLevel;
+  for (auto &[levelIndex, level]: levels)
+    for (const auto &brick: level.bricks)
+      brick->active = levelIndex == newLevel;
   levelIndex = newLevel;
 }
 
@@ -69,10 +71,10 @@ void BrickBreaker::Reset() {
   //ball->transform.position = Engine2D::Vector2{0, 1.5f};
 
   // Load the game levels
-  levels.emplace_back(0);
-  levels.emplace_back(1);
-  levels.emplace_back(2);
-  levels.emplace_back(3);
+  levels.emplace(0, GameLevel(0));
+  levels.emplace(1, GameLevel(1));
+  levels.emplace(2, GameLevel(2));
+  levels.emplace(3, GameLevel(3));
 
   // Load level 0 and unload all the others
   ChangeLevel(0);

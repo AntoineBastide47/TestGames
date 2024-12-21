@@ -67,38 +67,25 @@ GameLevel::GameLevel(const int index) {
         unit_height * (height - y - 0.5f)
       };
       const Engine2D::Vector2 size{unit_width, unit_height};
-      if (levels[index][y][x] == 1) {
-        auto brick = new Brick(
-          "Brick[" + std::to_string(pos.x) + "][" + std::to_string(pos.y) + "]",
-          nullptr,
-          Engine2D::ResourceManager::GetTexture("block_solid"),
-          true,
-          1
-        );
-        brick->transform.position = pos;
-        brick->transform.scale = size;
-        this->bricks.push_back(brick);
-      }
-      else if (levels[index][y][x] > 1) {
-        auto brick = new Brick(
-          "Brick[" + std::to_string(pos.x) + "][" + std::to_string(pos.y) + "]",
-          nullptr,
-          Engine2D::ResourceManager::GetTexture("block"),
-          false,
-          levels[index][y][x] - 1
-        );
+      if (levels[index][y][x] < 1)
+        continue;
 
-        brick->transform.position = pos;
-        brick->transform.scale = size;
-        this->bricks.push_back(brick);
-      }
+      std::string name = std::to_string(index) + ") Brick[" + std::to_string(pos.x) + "][" + std::to_string(pos.y) + "]";
+      BrickBreaker::AddEntity<Brick>(name);
+      auto brick = BrickBreaker::Find<Brick>(name);
+      brick->transform.position = pos;
+      brick->transform.scale = size;
+      brick->isSolid = levels[index][y][x] == 1;
+      brick->lives = levels[index][y][x] == 1 ? 1 : levels[index][y][x] - 1;
+      brick->SetTexture(Engine2D::ResourceManager::GetTexture(brick->isSolid ? "block_solid" : "block"));
+      this->bricks.insert(brick);
     }
   }
 }
 
 bool GameLevel::IsCompleted() {
   return std::ranges::all_of(
-    this->bricks, [](const Brick *tile) {
+    this->bricks, [](const std::shared_ptr<Brick> &tile) {
       return tile->isSolid;
     }
   );

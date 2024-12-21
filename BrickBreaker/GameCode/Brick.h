@@ -14,12 +14,12 @@ class Brick final : public Engine2D::Entity2D {
   public:
     int lives;
     bool isSolid;
-    Engine2D::Physics::Rigidbody2D *rigidbody;
+    std::shared_ptr<Engine2D::Physics::Rigidbody2D> rigidbody;
 
-    Brick(const std::string &name, Entity2D *parent, Texture2D *texture, bool isSolid, int lives);
+    explicit Brick(const std::string &name) : Entity2D(name), lives(0), isSolid(false), rigidbody(nullptr) {}
 
     void Initialize() override;
-    void OnCollision(Engine2D::Physics::Rigidbody2D *rigidbody) override;
+    void OnCollision(const std::shared_ptr<Engine2D::Physics::Rigidbody2D> &collider) override;
   private:
     static glm::vec3 GetColor(bool isSolid, int lives);
 };

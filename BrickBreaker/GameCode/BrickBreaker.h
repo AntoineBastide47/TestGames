@@ -13,16 +13,22 @@
 #include "GameLevel.h"
 #include "Paddle.h"
 
+class Background : public Engine2D::Entity2D {
+  public:
+    explicit Background(const std::string &name) : Entity2D(name) {}
+    void Initialize() override;
+};
+
 class BrickBreaker final : public Engine2D::Game2D {
   public:
-    static std::vector<GameLevel> levels;
+    static std::unordered_map<int, GameLevel> levels;
     static int levelIndex;
-    Engine2D::Entity2D background;
-    static Paddle *paddle;
-    static Ball *ball;
+
+    static std::shared_ptr<Paddle> paddle;
+    static std::shared_ptr<Ball> ball;
+    static std::shared_ptr<Background> background;
 
     BrickBreaker(int width, int height);
-    ~BrickBreaker() override;
 
     void Initialize() override;
     static void ChangeLevel(int newLevel);

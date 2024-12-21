@@ -15,8 +15,9 @@ using Engine2D::Rendering::Texture2D;
 
 class Paddle : public Engine2D::Entity2D {
   public:
-    Engine2D::Physics::Rigidbody2D *rigidbody;
-    Paddle(const std::string &name, Entity2D *parent, Texture2D *texture);
+    std::shared_ptr<Engine2D::Physics::Rigidbody2D> rigidbody;
+
+    explicit Paddle(const std::string &name) : Entity2D(name) {}
 
     void Initialize() override;
 };

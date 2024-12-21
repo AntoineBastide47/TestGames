@@ -4,28 +4,24 @@
 // Date: 15/11/2024
 //
 
-#include <2D/Physics/Rigidbody2D.h>
-
 #include "Brick.h"
 
-Brick::Brick(const std::string &name, Entity2D *parent, Texture2D *texture, const bool isSolid, const int lives)
-  : Entity2D(name, parent, texture), lives(lives), isSolid(isSolid) {
-  textureColor = GetColor(isSolid, lives);
-}
-
 void Brick::Initialize() {
-  rigidbody = Engine2D::Physics::Rigidbody2D::CreateRectangleBody(transform.scale->x, transform.scale->y, 100, 1, true);
+  textureColor = GetColor(isSolid, lives);
+
+  AddComponent<Engine2D::Physics::Rigidbody2D>();
+  rigidbody = GetComponent<Engine2D::Physics::Rigidbody2D>();
+  rigidbody->SetType(Engine2D::Physics::Rigidbody2D::Rectangle, 100, transform.WorldPosition(), 0);
+  rigidbody->isStatic = true;
   rigidbody->affectedByGravity = false;
-  AddComponent(rigidbody);
 }
 
-void Brick::OnCollision(Engine2D::Physics::Rigidbody2D *rigidbody) {
-  if (rigidbody->Type() == Engine2D::Physics::Rigidbody2D::Circle && !isSolid) {
+void Brick::OnCollision(const std::shared_ptr<Engine2D::Physics::Rigidbody2D> &collider) {
+  if (!isSolid) {
     lives -= 1;
-    textureColor = GetColor(isSolid, lives);
     if (lives <= 0)
-
       Destroy();
+    textureColor = GetColor(isSolid, lives);
   }
 }
 
