@@ -18,8 +18,8 @@ class Ball : public Engine2D::Entity2D {
 
     explicit Ball(const std::string &name) : Entity2D(name) {}
 
-    void Initialize() override;
-    void OnCollision(const std::shared_ptr<Engine2D::Physics::Rigidbody2D> &collider) override;
+    void OnInitialize() override;
+    void OnUpdate() override;
 
     void Reset();
 };

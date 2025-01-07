@@ -70,9 +70,7 @@ GameLevel::GameLevel(const int index) {
       if (levels[index][y][x] < 1)
         continue;
 
-      std::string name = std::to_string(index) + ") Brick[" + std::to_string(pos.x) + "][" + std::to_string(pos.y) + "]";
-      BrickBreaker::AddEntity<Brick>(name);
-      auto brick = BrickBreaker::Find<Brick>(name);
+      auto brick = BrickBreaker::AddEntity<Brick>(std::to_string(index) + ") Brick[" + std::to_string(pos.x) + "][" + std::to_string(pos.y) + "]");
       brick->transform.position = pos;
       brick->transform.scale = size;
       brick->isSolid = levels[index][y][x] == 1;

@@ -16,7 +16,7 @@
 class Background : public Engine2D::Entity2D {
   public:
     explicit Background(const std::string &name) : Entity2D(name) {}
-    void Initialize() override;
+    void OnInitialize() override;
 };
 
 class BrickBreaker final : public Engine2D::Game2D {
@@ -30,7 +30,7 @@ class BrickBreaker final : public Engine2D::Game2D {
 
     BrickBreaker(int width, int height);
 
-    void Initialize() override;
+    void OnInitialize() override;
     static void ChangeLevel(int newLevel);
     static void Reset();
 };

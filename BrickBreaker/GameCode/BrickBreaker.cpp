@@ -7,8 +7,8 @@
 #include <iostream>
 #include <2D/Entity2D.h>
 #include <2D/ResourceManager.h>
-#include <Input/Keyboard.h>
 #include <Common/Settings.h>
+#include <Input/Keyboard.h>
 
 #include "BrickBreaker.h"
 
@@ -21,14 +21,14 @@ std::shared_ptr<Paddle> BrickBreaker::paddle{};
 std::shared_ptr<Ball> BrickBreaker::ball{};
 std::shared_ptr<Background> BrickBreaker::background{};
 
-void Background::Initialize() {
+void Background::OnInitialize() {
   SetTexture(ResourceManager::GetTexture("background"));
   transform.scale = Engine2D::Vector2(BrickBreaker::ViewportWidth(), BrickBreaker::ViewportHeight());
 }
 
 BrickBreaker::BrickBreaker(const int width, const int height) : Game2D(width, height, "Brick Breaker") {}
 
-void BrickBreaker::Initialize() {
+void BrickBreaker::OnInitialize() {
   // load textures
   ResourceManager::LoadTexture("Assets/Textures/background.jpg", false, "background");
   ResourceManager::LoadTexture("Assets/Textures/block.png", false, "block");
@@ -36,7 +36,7 @@ void BrickBreaker::Initialize() {
   ResourceManager::LoadTexture("Assets/Textures/paddle.png", true, "paddle");
   ResourceManager::LoadTexture("Assets/Textures/awesomeface.png", true, "face");
 
-  Engine::Settings::Physics.SetFrictionEnabled(false);
+  Engine::Settings::Graphics::SetVsyncEnabled(true);
 
   // Create all the entities
   AddEntity<Background>("background");
@@ -49,18 +49,23 @@ void BrickBreaker::Initialize() {
   levels.emplace(2, GameLevel(2));
   levels.emplace(3, GameLevel(3));
 
-  // Load level 0 and unload all the others
   ChangeLevel(0);
 
   Engine::Input::Keyboard::ESCAPE += [this](const Engine::Input::KeyboardAndMouseContext ctx) {
     Close(ctx);
+  };
+
+  // Remove frame rate cap to test performance changes
+  Engine::Input::Keyboard::T += [this](const Engine::Input::KeyboardAndMouseContext ctx) {
+    if (ctx.pressed)
+      Engine::Settings::Graphics::SetVsyncEnabled(!Engine::Settings::Graphics::GetVsyncEnabled());
   };
 }
 
 void BrickBreaker::ChangeLevel(const int newLevel) {
   for (auto &[levelIndex, level]: levels)
     for (const auto &brick: level.bricks)
-      brick->active = levelIndex == newLevel;
+      brick->SetActive(levelIndex == newLevel);
   levelIndex = newLevel;
 }
 

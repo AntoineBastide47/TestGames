@@ -22,7 +22,7 @@ include(FetchContent)
 FetchContent_Declare(
     cpptrace
     GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
-    GIT_TAG        v0.7.3 # <HASH or TAG>
+    GIT_TAG v0.7.3 # <HASH or TAG>
 )
 FetchContent_MakeAvailable(cpptrace)
 
@@ -87,7 +87,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${cpptrace_SOURCE_DIR}/include
 )
 
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
   target_compile_options(${PROJECT_NAME} PRIVATE
       -O3                     # General optimization
       -DNDEBUG                # Disable assertions
@@ -103,8 +103,27 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
   set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
   # Add stripping for Release builds
-  #add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_STRIP} $<TARGET_FILE:${PROJECT_NAME}>)
-endif()
+  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_STRIP} $<TARGET_FILE:${PROJECT_NAME}>)
+elseif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+  if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    # Enable AddressSanitizer and retain frame pointers for better stack traces
+    set(SANITIZER_FLAGS "-fsanitize=address -fno-omit-frame-pointer")
+
+    # Enable additional debugging features
+    set(EXTRA_DEBUG_FLAGS "-g -O1")  # Generate debug symbols with minimal optimization
+    set(ASAN_OPTIONS_FLAGS "-fsanitize-recover=address -fsanitize=undefined -fsanitize-address-use-after-scope")
+
+    # Combine flags
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SANITIZER_FLAGS} ${EXTRA_DEBUG_FLAGS} ${ASAN_OPTIONS_FLAGS}")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${SANITIZER_FLAGS} ${EXTRA_DEBUG_FLAGS} ${ASAN_OPTIONS_FLAGS}")
+    set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} ${SANITIZER_FLAGS} ${EXTRA_DEBUG_FLAGS} ${ASAN_OPTIONS_FLAGS}")
+
+    # Pass runtime options for AddressSanitizer via environment variables
+    add_compile_definitions(
+        ASAN_OPTIONS="verbosity=1:halt_on_error=1:detect_leaks=1:symbolize=1"
+    )
+  endif ()
+endif ()
 
 ########################################################################################################################
 #                                                                                                                      #

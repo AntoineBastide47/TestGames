@@ -4,7 +4,6 @@
 // Date: 20/11/2024
 //
 
-#include <random>
 #include <2D/ResourceManager.h>
 #include <Input/Keyboard.h>
 
@@ -13,31 +12,51 @@
 
 Engine2D::Vector2f Ball::INITIAL_VELOCITY = Engine2D::Vector2f{0, 10} * 100;
 
-void Ball::Initialize() {
+void Ball::OnInitialize() {
   SetTexture(Engine2D::ResourceManager::GetTexture("face"));
   transform.SetParent(BrickBreaker::Find<Paddle>("paddle"));
-  transform.scale = Engine2D::Vector2f::One.Scaled({0.2f, 1}) * 1.5f;
+  transform.scale = Engine2D::Vector2f{0.3f, 1.5f};
   transform.position = Engine2D::Vector2f{0, 1.25f};
 
-  AddComponent<Rigidbody2D>();
-  rigidbody = GetComponent<Rigidbody2D>();
-  rigidbody->SetType(Rigidbody2D::Circle, 1, Engine2D::Vector2f::Zero, transform.WorldHalfScale().x);
-  rigidbody->isStatic = true;
+  AddComponent<Engine2D::Physics::CircleCollider2D>();
+  rigidbody = AddComponent<Engine2D::Physics::Rigidbody2D>();
+  rigidbody->isKinematic = true;
   rigidbody->affectedByGravity = false;
-  rigidbody->AddForce(INITIAL_VELOCITY);
-  rigidbody->BindToViewport();
 
   Engine::Input::Keyboard::SPACE += [this](const Engine::Input::KeyboardAndMouseContext ctx) {
-    if (ctx.pressed) {
+    if (ctx.pressed && stuck) {
       stuck = false;
       transform.SetParent(nullptr);
-      this->rigidbody->isStatic = false;
+      rigidbody->isKinematic = false;
+      rigidbody->AddForce(INITIAL_VELOCITY);
     }
   };
 }
 
-void Ball::OnCollision(const std::shared_ptr<Rigidbody2D> &collider) {
-  rigidbody->AddForce(INITIAL_VELOCITY * 0.1f);
+void Ball::OnUpdate() {
+  // Get half dimensions of the screen
+  const float halfWidth = BrickBreaker::ViewportWidth() * 0.5f;
+  const float halfHeight = BrickBreaker::ViewportHeight() * 0.5f;
+
+  // Check for collisions with the left and right boundaries
+  if (transform.position->x <= -halfWidth + transform.scale->x * 0.5f) {
+    rigidbody->linearVelocity.x = -rigidbody->linearVelocity.x;
+    transform.position->x = -halfWidth + transform.scale->x * 0.5f;
+  }
+  else if (transform.position->x >= halfWidth - transform.scale->x * 0.5f) {
+    rigidbody->linearVelocity.x = -rigidbody->linearVelocity.x;
+    transform.position->x = halfWidth - transform.scale->x * 0.5f;
+  }
+
+  // Check for collisions with the top and bottom boundaries
+  if (transform.position->y <= -halfHeight + transform.scale->y * 0.5f) {
+    rigidbody->linearVelocity.y = -rigidbody->linearVelocity.y;
+    transform.position->y = -halfHeight + transform.scale->y * 0.5f;
+  }
+  else if (transform.position->y >= halfHeight - transform.scale->y * 0.5f) {
+    rigidbody->linearVelocity.y = -rigidbody->linearVelocity.y;
+    transform.position->y = halfHeight - transform.scale->y * 0.5f;
+  }
 }
 
 void Ball::Reset() {
