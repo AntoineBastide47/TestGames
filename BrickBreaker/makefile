@@ -1,6 +1,7 @@
 BUILD_FOLDER := cmake-build-debug
 DEBUG_BUILD_FILE := build_debug
 PROJECT_NAME := BrickBreaker
+CLEAR_CONSOLE := 1
 
 default: help
 
@@ -14,8 +15,6 @@ build: ## Build's the game executable
 	fi; \
 	cmake -B $(BUILD_FOLDER) -S .; \
 	cmake --build $(BUILD_FOLDER); \
-	rm -f ./EngineFiles/*.a; \
-	mv -f ./$(BUILD_FOLDER)/[a-zA-Z0-9]*-[0-9]*.[0-9]*.[0-9]*.a EngineFiles;
 
 build-clean: ## Build's a cleaned version of the game executable
 	@clear; \
