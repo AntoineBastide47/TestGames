@@ -4,26 +4,23 @@
 // Date: 02/11/2024
 //
 
-#include <iostream>
-#include <2D/Entity2D.h>
-#include <2D/ResourceManager.h>
+#include <Engine2D/Entity2D.h>
+#include <Engine2D/ResourceManager.h>
 #include <Common/Settings.h>
 #include <Input/Keyboard.h>
 
 #include "BrickBreaker.h"
+#include "Ball.h"
+#include "Paddle.h"
 
 using Engine2D::ResourceManager;
 
 std::unordered_map<int, GameLevel> BrickBreaker::levels{};
 int BrickBreaker::levelIndex = 0;
 
-std::shared_ptr<Paddle> BrickBreaker::paddle{};
-std::shared_ptr<Ball> BrickBreaker::ball{};
-std::shared_ptr<Background> BrickBreaker::background{};
-
 void Background::OnInitialize() {
   SetTexture(ResourceManager::GetTexture("background"));
-  transform.scale = Engine2D::Vector2(BrickBreaker::ViewportWidth(), BrickBreaker::ViewportHeight());
+  transform.SetScale({BrickBreaker::ViewportWidth(), BrickBreaker::ViewportHeight()});
 }
 
 BrickBreaker::BrickBreaker(const int width, const int height) : Game2D(width, height, "Brick Breaker") {}
@@ -35,8 +32,10 @@ void BrickBreaker::OnInitialize() {
   ResourceManager::LoadTexture("Assets/Textures/block_solid.png", false, "block_solid");
   ResourceManager::LoadTexture("Assets/Textures/paddle.png", true, "paddle");
   ResourceManager::LoadTexture("Assets/Textures/awesomeface.png", true, "face");
+  ResourceManager::LoadTexture("Assets/Textures/particle.png", true, "particle");
 
-  Engine::Settings::Graphics::SetVsyncEnabled(true);
+  // Disable friction so that the ball does not lose velocity
+  Engine::Settings::Physics::SetFrictionEnabled(false);
 
   // Create all the entities
   AddEntity<Background>("background");
@@ -44,6 +43,8 @@ void BrickBreaker::OnInitialize() {
   AddEntity<Ball>("ball");
 
   // Load the game levels
+  /*
+  */
   levels.emplace(0, GameLevel(0));
   levels.emplace(1, GameLevel(1));
   levels.emplace(2, GameLevel(2));

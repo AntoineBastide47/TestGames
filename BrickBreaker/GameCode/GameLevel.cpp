@@ -5,12 +5,12 @@
 //
 
 #include <string>
-#include <2D/ResourceManager.h>
+#include <Engine2D/ResourceManager.h>
 
 #include "GameLevel.h"
 #include "BrickBreaker.h"
 
-std::vector<std::vector<std::vector<int> > > levels = {
+std::vector<std::vector<std::vector<int>>> levels = {
   {
     {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5},
     {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5},
@@ -61,22 +61,20 @@ GameLevel::GameLevel(const int index) {
 
   for (unsigned int y = 0; y < height; y++) {
     for (unsigned int x = 0; x < width; x++) {
-      // check block type from level data (2D level array)
-      const Engine2D::Vector2 pos{
-        -BrickBreaker::ViewportWidth() * 0.5f + unit_width * (0.5f + x),
-        unit_height * (height - y - 0.5f)
-      };
-      const Engine2D::Vector2 size{unit_width, unit_height};
       if (levels[index][y][x] < 1)
         continue;
 
-      auto brick = BrickBreaker::AddEntity<Brick>(std::to_string(index) + ") Brick[" + std::to_string(pos.x) + "][" + std::to_string(pos.y) + "]");
-      brick->transform.position = pos;
-      brick->transform.scale = size;
+      const glm::vec2 size{unit_width, unit_height};
+      const glm::vec2 pos = size * glm::vec2(x - width * 0.5f + 0.5f, height - y - 0.5f);
+
+      auto brick = BrickBreaker::AddEntity<Brick>(
+        std::to_string(index) + ") Brick[" + std::to_string(pos.x) + "][" + std::to_string(pos.y) + "]"
+      );
+      brick->transform.SetPositionRotationAndScale(pos, 0, size);
       brick->isSolid = levels[index][y][x] == 1;
       brick->lives = levels[index][y][x] == 1 ? 1 : levels[index][y][x] - 1;
       brick->SetTexture(Engine2D::ResourceManager::GetTexture(brick->isSolid ? "block_solid" : "block"));
-      this->bricks.insert(brick);
+      this->bricks.emplace_back(brick);
     }
   }
 }

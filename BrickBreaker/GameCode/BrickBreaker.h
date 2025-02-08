@@ -7,11 +7,10 @@
 #ifndef BRICK_BREAKER_H
 #define BRICK_BREAKER_H
 
-#include <2D/Game2D.h>
+#include <unordered_map>
+#include <Engine2D/Game2D.h>
 
-#include "Ball.h"
 #include "GameLevel.h"
-#include "Paddle.h"
 
 class Background : public Engine2D::Entity2D {
   public:
@@ -23,10 +22,6 @@ class BrickBreaker final : public Engine2D::Game2D {
   public:
     static std::unordered_map<int, GameLevel> levels;
     static int levelIndex;
-
-    static std::shared_ptr<Paddle> paddle;
-    static std::shared_ptr<Ball> ball;
-    static std::shared_ptr<Background> background;
 
     BrickBreaker(int width, int height);
 

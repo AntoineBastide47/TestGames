@@ -7,8 +7,7 @@
 #ifndef PADDLE_H
 #define PADDLE_H
 
-#include <2D/Entity2D.h>
-#include <2D/Rendering/Texture2D.h>
+#include <Engine2D/Entity2D.h>
 
 using Engine2D::Rendering::Texture2D;
 

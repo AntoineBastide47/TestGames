@@ -7,7 +7,7 @@
 #ifndef BRICK_H
 #define BRICK_H
 
-#include <2D/Entity2D.h>
+#include <Engine2D/Entity2D.h>
 
 class Brick final : public Engine2D::Entity2D {
   public:
@@ -19,7 +19,7 @@ class Brick final : public Engine2D::Entity2D {
     void OnInitialize() override;
     void OnCollisionEnter2D(const std::shared_ptr<Engine2D::Physics::Collider2D> &collider) override;
   private:
-    static glm::vec3 GetColor(bool isSolid, int lives);
+    static glm::vec4 GetColor(bool isSolid, int lives);
 };
 
 #endif //BRICK_H

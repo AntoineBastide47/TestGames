@@ -4,7 +4,7 @@
 // Date: 30/10/2024
 //
 
-#include <2D/Game2D.h>
+#include <Engine2D/Game2D.h>
 #include <cmrc/cmrc.hpp>
 
 #include "GameCode/BrickBreaker.h"
@@ -26,5 +26,4 @@ int main() {
     }
   );
   game.Run();
-  return 0;
 }

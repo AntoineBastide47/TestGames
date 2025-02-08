@@ -12,7 +12,7 @@
 class GameLevel {
   public:
     // level state
-    std::unordered_set<std::shared_ptr<Brick>> bricks;
+    std::vector<std::shared_ptr<Brick>> bricks;
     // constructor
     explicit GameLevel(int index);
     // check if the level is completed (all non-solid tiles are destroyed)
