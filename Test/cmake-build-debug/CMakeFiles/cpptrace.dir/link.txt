@@ -1,0 +1,2 @@
+/Library/Developer/CommandLineTools/usr/bin/ar qc libcpptrace.a CMakeFiles/cpptrace.dir/Users/antoinebastide/Documents/GitHub/Perso/GameEngine/vendor/cpptrace/src/cpptrace.cpp.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib libcpptrace.a
