@@ -7,18 +7,17 @@
 #ifndef BRICK_H
 #define BRICK_H
 
-#include <Engine2D/Entity2D.h>
+#include <Engine2D/Behaviour.h>
+#include <glm/vec4.hpp>
 
-class Brick final : public Engine2D::Entity2D {
+class Brick final : public Engine2D::Behaviour {
   public:
-    int lives;
-    bool isSolid;
-
-    explicit Brick(const std::string &name) : Entity2D(name), lives(0), isSolid(false) {}
+    int lives = 0;
+    bool isSolid = false;
 
     void OnInitialize() override;
     void OnCollisionEnter2D(const std::shared_ptr<Engine2D::Physics::Collider2D> &collider) override;
-  private:
+
     static glm::vec4 GetColor(bool isSolid, int lives);
 };
 

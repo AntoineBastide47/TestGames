@@ -7,14 +7,10 @@
 #ifndef PADDLE_H
 #define PADDLE_H
 
-#include <Engine2D/Entity2D.h>
+#include <Engine2D/Behaviour.h>
 
-using Engine2D::Rendering::Texture2D;
-
-class Paddle : public Engine2D::Entity2D {
+class Paddle : public Engine2D::Behaviour {
   public:
-    explicit Paddle(const std::string &name) : Entity2D(name) {}
-
     void OnInitialize() override;
 };
 

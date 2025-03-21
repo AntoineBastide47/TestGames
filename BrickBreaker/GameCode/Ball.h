@@ -7,18 +7,22 @@
 #ifndef BALL_H
 #define BALL_H
 
-#include <Engine2D/Entity2D.h>
+#include <Engine2D/Behaviour.h>
 #include <Engine2D/Physics/Rigidbody2D.h>
 
-class Ball : public Engine2D::Entity2D {
+namespace Engine2D {
+  class ParticleSystem2D;
+}
+
+class Ball : public Engine2D::Behaviour {
   public:
     static glm::vec2 INITIAL_VELOCITY;
+
+    Ball();
 
     bool stuck = true;
     std::shared_ptr<Engine2D::Physics::Rigidbody2D> rigidbody;
     std::shared_ptr<Engine2D::ParticleSystem2D> particleSystem;
-
-    explicit Ball(const std::string &name) : Entity2D(name) {}
 
     void OnInitialize() override;
     void OnUpdate() override;

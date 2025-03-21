@@ -8,16 +8,15 @@
 #include "BrickBreaker.h"
 
 void Brick::OnInitialize() {
-  textureColor = GetColor(isSolid, lives);
-  AddComponent<Engine2D::Physics::RectangleCollider2D>();
+  Entity()->AddComponent<Engine2D::Physics::BoxCollider2D>();
 }
 
-void Brick::OnCollisionEnter2D(const std::shared_ptr<Engine2D::Physics::Collider2D> &collider) {
-  if (!isSolid){
+void Brick::OnCollisionEnter2D(const std::shared_ptr<Engine2D::Physics::Collider2D> &) {
+  if (!isSolid) {
     lives -= 1;
     if (lives <= 0)
-      Destroy();
-    textureColor = GetColor(isSolid, lives);
+      Entity()->Destroy();
+    Entity()->textureColor = GetColor(isSolid, lives);
   }
 }
 

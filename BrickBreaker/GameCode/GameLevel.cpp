@@ -4,6 +4,7 @@
 // Date: 15/11/2024
 //
 
+#include <iostream>
 #include <string>
 #include <Engine2D/ResourceManager.h>
 
@@ -53,6 +54,8 @@ std::vector<std::vector<std::vector<int>>> levels = {
 };
 
 GameLevel::GameLevel(const int index) {
+  level = BrickBreaker::AddEntity("level" + std::to_string(index));
+
   // Calculate dimensions
   const unsigned int width = levels[index][0].size();
   const unsigned int height = levels[index].size();
@@ -67,22 +70,16 @@ GameLevel::GameLevel(const int index) {
       const glm::vec2 size{unit_width, unit_height};
       const glm::vec2 pos = size * glm::vec2(x - width * 0.5f + 0.5f, height - y - 0.5f);
 
-      auto brick = BrickBreaker::AddEntity<Brick>(
-        std::to_string(index) + ") Brick[" + std::to_string(pos.x) + "][" + std::to_string(pos.y) + "]"
-      );
-      brick->transform.SetPositionRotationAndScale(pos, 0, size);
+      auto brick = BrickBreaker::AddEntity(
+        "Brick[" + std::to_string(pos.x) + "][" + std::to_string(pos.y) + "]"
+      )->AddComponent<Brick>();
+      brick->Transform()->SetPositionRotationAndScale(pos, 0, size);
       brick->isSolid = levels[index][y][x] == 1;
       brick->lives = levels[index][y][x] == 1 ? 1 : levels[index][y][x] - 1;
-      brick->SetTexture(Engine2D::ResourceManager::GetTexture(brick->isSolid ? "block_solid" : "block"));
-      this->bricks.emplace_back(brick);
+      brick->Entity()->SetTexture(Engine2D::ResourceManager::GetTexture(brick->isSolid ? "block_solid" : "block"));
+      brick->Entity()->textureColor = Brick::GetColor(brick->isSolid, brick->lives);
+      brick->Transform()->SetParent(level);
+      bricks.emplace_back(brick);
     }
   }
-}
-
-bool GameLevel::IsCompleted() {
-  return std::ranges::all_of(
-    this->bricks, [](const std::shared_ptr<Brick> &tile) {
-      return tile->isSolid;
-    }
-  );
 }

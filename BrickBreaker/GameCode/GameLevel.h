@@ -7,16 +7,17 @@
 #ifndef GAME_LEVEL_H
 #define GAME_LEVEL_H
 
+#include <vector>
+
 #include "Brick.h"
 
 class GameLevel {
   public:
+    std::shared_ptr<Engine2D::Entity2D> level;
     // level state
     std::vector<std::shared_ptr<Brick>> bricks;
     // constructor
     explicit GameLevel(int index);
-    // check if the level is completed (all non-solid tiles are destroyed)
-    bool IsCompleted();
 };
 
 #endif //GAME_LEVEL_H
