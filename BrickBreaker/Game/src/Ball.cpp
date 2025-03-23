@@ -12,7 +12,7 @@
 #include "Ball.hpp"
 #include "BrickBreaker.hpp"
 
-glm::vec2 Ball::INITIAL_VELOCITY = glm::vec2(3, 10) * 100.0f;
+glm::vec2 Ball::INITIAL_VELOCITY = glm::vec2(0, 10) * 100.0f;
 
 Ball::Ball() : rigidbody(nullptr), particleSystem(nullptr) {}
 

@@ -1,2 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/ar qc libassets.a CMakeFiles/assets.dir/__cmrc_assets/lib.cpp.o
-/Library/Developer/CommandLineTools/usr/bin/ranlib libassets.a

@@ -87,6 +87,7 @@ add_executable(${PROJECT_NAME} main.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${ENGINE_LOCATION}/include Game/include)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ${ENGINE_PLATFORM_LIBS}
     ${ENGINE_LIB}
@@ -104,6 +105,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
   target_compile_options(${PROJECT_NAME} PRIVATE
       -O3 -DNDEBUG -finline-functions -fomit-frame-pointer
       -ffunction-sections -fdata-sections
+      -fno-fast-math -fno-strict-aliasing -frounding-math
   )
   target_link_options(${PROJECT_NAME} PRIVATE -Wl,-O2)
   set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
