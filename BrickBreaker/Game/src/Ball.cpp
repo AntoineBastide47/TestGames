@@ -12,7 +12,7 @@
 #include "Ball.hpp"
 #include "BrickBreaker.hpp"
 
-glm::vec2 Ball::INITIAL_VELOCITY = glm::vec2(0, 10) * 100.0f;
+glm::vec2 Ball::INITIAL_VELOCITY = glm::vec2(3, 10) * 100.0f;
 
 Ball::Ball() : rigidbody(nullptr), particleSystem(nullptr) {}
 
@@ -21,7 +21,7 @@ void Ball::OnInitialize() {
   Transform()->SetParent(BrickBreaker::Find("paddle"));
   Transform()->SetPositionRotationAndScale(glm::vec2(0, 1.25f), 0, glm::vec2(0.3f, 1.5f));
 
-  (void)Entity()->AddComponent<Engine2D::Physics::CircleCollider2D>();
+  Entity()->AddComponent<Engine2D::Physics::CircleCollider2D>();
   rigidbody = Entity()->AddComponent<Engine2D::Physics::Rigidbody2D>();
   rigidbody->isKinematic = true;
 

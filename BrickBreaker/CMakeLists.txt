@@ -39,7 +39,10 @@ add_subdirectory(
     ${CMAKE_BINARY_DIR}/cpptrace
 )
 add_library(cpptrace STATIC ${ENGINE_LOCATION}/vendor/cpptrace/src/cpptrace.cpp)
-target_include_directories(cpptrace PUBLIC ${ENGINE_LOCATION}/vendor/cpptrace/include ${ENGINE_LOCATION}/vendor/cpptrace/src)
+target_include_directories(cpptrace PUBLIC
+    ${ENGINE_LOCATION}/vendor/cpptrace/include
+    ${ENGINE_LOCATION}/vendor/cpptrace/src
+)
 
 # --------------------------
 # Engine Setup
@@ -121,6 +124,16 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(ASAN_OPTIONS="verbosity=1:halt_on_error=1:detect_leaks=1:symbolize=1")
   endif ()
 endif ()
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E rename
+    $<TARGET_FILE:${PROJECT_NAME}>
+    ${CMAKE_CURRENT_BINARY_DIR}/../$<TARGET_FILE_NAME:${PROJECT_NAME}>
+)
+
+# --------------------------
+# Macros
+# --------------------------
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
     $<$<CONFIG:Release>:ENGINE_DEBUG=0>

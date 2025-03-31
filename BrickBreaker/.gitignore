@@ -39,3 +39,5 @@
 build_debug/*
 **/.DS_Store
 CMakeConfig.txt
+BrickBreaker
+engine-cli
