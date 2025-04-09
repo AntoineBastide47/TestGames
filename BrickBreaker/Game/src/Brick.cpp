@@ -5,6 +5,9 @@
 //
 
 #include "Brick.hpp"
+
+#include <Engine2D/Rendering/SpriteRenderer.hpp>
+
 #include "BrickBreaker.hpp"
 
 void Brick::OnInitialize() {
@@ -16,7 +19,7 @@ void Brick::OnCollisionEnter2D(const std::shared_ptr<Engine2D::Physics::Collider
     lives -= 1;
     if (lives <= 0)
       Entity()->Destroy();
-    Entity()->textureColor = GetColor(isSolid, lives);
+    Entity()->GetComponent<Engine2D::Rendering::SpriteRenderer>()->color = GetColor(isSolid, lives);
   }
 }
 

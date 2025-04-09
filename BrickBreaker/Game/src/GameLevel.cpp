@@ -5,7 +5,8 @@
 //
 
 #include <string>
-#include <Engine2D/ResourceManager.hpp>
+#include <Engine/ResourceManager.hpp>
+#include <Engine2D/Rendering/SpriteRenderer.hpp>
 
 #include "GameLevel.hpp"
 #include "BrickBreaker.hpp"
@@ -75,9 +76,10 @@ GameLevel::GameLevel(const int index) {
       brick->Transform()->SetPositionRotationAndScale(pos, 0, size);
       brick->isSolid = levels[index][y][x] == 1;
       brick->lives = levels[index][y][x] == 1 ? 1 : levels[index][y][x] - 1;
-      brick->Entity()->SetTexture(Engine2D::ResourceManager::GetTexture(brick->isSolid ? "block_solid" : "block"));
-      brick->Entity()->textureColor = Brick::GetColor(brick->isSolid, brick->lives);
       brick->Transform()->SetParent(level);
+      const auto renderer = brick->Entity()->AddComponent<Engine2D::Rendering::SpriteRenderer>();
+      renderer->sprite = Engine::ResourceManager::GetSprite(brick->isSolid ? "block_solid" : "block");
+      renderer->color = Brick::GetColor(brick->isSolid, brick->lives);
       bricks.emplace_back(brick);
     }
   }

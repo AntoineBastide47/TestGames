@@ -4,10 +4,11 @@
 // Date: 20/11/2024
 //
 
-#include <Engine2D/ResourceManager.hpp>
+#include <Engine/ResourceManager.hpp>
 #include <Engine/Input/Keyboard.hpp>
 #include <Engine2D/ParticleSystem/ParticleSystem2D.hpp>
 #include <Engine/Settings.hpp>
+#include <Engine2D/Rendering/SpriteRenderer.hpp>
 
 #include "Ball.hpp"
 #include "BrickBreaker.hpp"
@@ -17,7 +18,7 @@ glm::vec2 Ball::INITIAL_VELOCITY = glm::vec2(3, 10) * 100.0f;
 Ball::Ball() : rigidbody(nullptr), particleSystem(nullptr) {}
 
 void Ball::OnInitialize() {
-  Entity()->SetTexture(Engine2D::ResourceManager::GetTexture("face"));
+  Entity()->AddComponent<Engine2D::Rendering::SpriteRenderer>()->sprite = Engine::ResourceManager::GetSprite("face");
   Transform()->SetParent(BrickBreaker::Find("paddle"));
   Transform()->SetPositionRotationAndScale(glm::vec2(0, 1.25f), 0, glm::vec2(0.3f, 1.5f));
 
@@ -26,9 +27,10 @@ void Ball::OnInitialize() {
   rigidbody->isKinematic = true;
 
   particleSystem = Entity()->AddComponent<Engine2D::ParticleSystem2D>();
-  particleSystem->texture = Engine2D::ResourceManager::GetTexture("particle");
+  particleSystem->texture = Engine::ResourceManager::GetTexture("particle");
   particleSystem->SetMaxParticles(100);
   particleSystem->loop = true;
+  particleSystem->SetDuration(0);
   particleSystem->particleLifetime = 2;
 
   particleSystem->startColor = glm::vec4(1, 1, 0, 1);
@@ -45,6 +47,7 @@ void Ball::OnInitialize() {
       rigidbody->isKinematic = false;
       rigidbody->affectedByGravity = false;
       rigidbody->AddForce(INITIAL_VELOCITY);
+      particleSystem->SetDuration(1);
     }
   };
 }

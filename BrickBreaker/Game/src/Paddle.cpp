@@ -4,14 +4,15 @@
 // Date: 15/11/2024
 //
 
-#include <Engine2D/ResourceManager.hpp>
+#include <Engine/ResourceManager.hpp>
 #include <Engine/Input/Keyboard.hpp>
+#include <Engine2D/Rendering/SpriteRenderer.hpp>
 
 #include "Paddle.hpp"
 #include "BrickBreaker.hpp"
 
 void Paddle::OnInitialize() {
-  Entity()->SetTexture(Engine2D::ResourceManager::GetTexture("paddle"));
+  Entity()->AddComponent<Engine2D::Rendering::SpriteRenderer>()->sprite = Engine::ResourceManager::GetSprite("paddle");
   Transform()->SetScale({BrickBreaker::ViewportWidth() / 8, BrickBreaker::ViewportHeight() / 30});
   Transform()->SetPosition({0, (Transform()->GetScale().y - BrickBreaker::ViewportHeight()) * 0.5f});
 
