@@ -71,15 +71,14 @@ GameLevel::GameLevel(const int index) {
       const glm::vec2 pos = size * glm::vec2(x - width * 0.5f + 0.5f, height - y - 0.5f);
 
       auto brick = BrickBreaker::AddEntity(
-        "Brick[" + std::to_string(pos.x) + "][" + std::to_string(pos.y) + "]"
+        "Brick[" + std::to_string(pos.x) + "][" + std::to_string(pos.y) + "]", true, pos, 0, size, level
       )->AddComponent<Brick>();
-      brick->Transform()->SetPositionRotationAndScale(pos, 0, size);
       brick->isSolid = levels[index][y][x] == 1;
       brick->lives = levels[index][y][x] == 1 ? 1 : levels[index][y][x] - 1;
-      brick->Transform()->SetParent(level);
       const auto renderer = brick->Entity()->AddComponent<Engine2D::Rendering::SpriteRenderer>();
-      renderer->sprite = Engine::ResourceManager::GetSprite(brick->isSolid ? "block_solid" : "block");
-      renderer->color = Brick::GetColor(brick->isSolid, brick->lives);
+      renderer->SetSprite(Engine::ResourceManager::GetSprite(brick->isSolid ? "block_solid" : "block"));
+      renderer->SetColor(Brick::GetColor(brick->isSolid, brick->lives));
+      renderer->SetRenderOrder(1);
       bricks.emplace_back(brick);
     }
   }

@@ -9,6 +9,8 @@
 #include <Engine2D/ParticleSystem/ParticleSystem2D.hpp>
 #include <Engine/Settings.hpp>
 #include <Engine2D/Rendering/SpriteRenderer.hpp>
+#include <glm/glm.hpp>
+#include <Engine2D/Physics/Collider2D.hpp>
 
 #include "Ball.hpp"
 #include "BrickBreaker.hpp"
@@ -18,7 +20,7 @@ glm::vec2 Ball::INITIAL_VELOCITY = glm::vec2(3, 10) * 100.0f;
 Ball::Ball() : rigidbody(nullptr), particleSystem(nullptr) {}
 
 void Ball::OnInitialize() {
-  Entity()->AddComponent<Engine2D::Rendering::SpriteRenderer>()->sprite = Engine::ResourceManager::GetSprite("face");
+  Entity()->AddComponent<Engine2D::Rendering::SpriteRenderer>()->SetSprite(Engine::ResourceManager::GetSprite("face"));
   Transform()->SetParent(BrickBreaker::Find("paddle"));
   Transform()->SetPositionRotationAndScale(glm::vec2(0, 1.25f), 0, glm::vec2(0.3f, 1.5f));
 
@@ -27,15 +29,16 @@ void Ball::OnInitialize() {
   rigidbody->isKinematic = true;
 
   particleSystem = Entity()->AddComponent<Engine2D::ParticleSystem2D>();
-  particleSystem->texture = Engine::ResourceManager::GetTexture("particle");
+  particleSystem->sprite = Engine::ResourceManager::GetSprite("particle");
   particleSystem->SetMaxParticles(100);
   particleSystem->loop = true;
   particleSystem->SetDuration(0);
   particleSystem->particleLifetime = 2;
+  particleSystem->renderOrder = 1;
 
   particleSystem->startColor = glm::vec4(1, 1, 0, 1);
   particleSystem->endColor = glm::vec4(1, 1, 1, 1);
-  particleSystem->startSize = glm::vec2(1.5f);
+  particleSystem->startSize = glm::vec2(2);
 
   particleSystem->startAngularVelocity = 360;
   particleSystem->endAngularVelocity = -360;

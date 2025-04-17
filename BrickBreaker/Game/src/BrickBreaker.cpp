@@ -21,24 +21,26 @@ BrickBreaker::BrickBreaker(const int width, const int height) : Game2D(width, he
 
 void Background::OnInitialize() {
   const auto renderer = Entity()->AddComponent<Engine2D::Rendering::SpriteRenderer>();
-  renderer->sprite = ResourceManager::GetSprite("background");
+  renderer->SetSprite(ResourceManager::GetSprite("background"));
   Transform()->SetScale({BrickBreaker::ViewportWidth(), BrickBreaker::ViewportHeight()});
 }
 
 void BrickBreaker::OnInitialize() {
   // load textures
-  ResourceManager::LoadTextureAndSprite("Assets/Textures/background.jpg", false, "background");
-  ResourceManager::LoadTextureAndSprite("Assets/Textures/block.png", false, "block");
-  ResourceManager::LoadTextureAndSprite("Assets/Textures/block_solid.png", false, "block_solid");
-  ResourceManager::LoadTextureAndSprite("Assets/Textures/paddle.png", true, "paddle");
-  ResourceManager::LoadTextureAndSprite("Assets/Textures/awesomeface.png", true, "face");
-  ResourceManager::LoadTextureAndSprite("Assets/Textures/particle.png", true, "particle");
+  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/background.jpg", "background");
+  ResourceManager::LoadTexture2D("Assets/Textures/blocks.png", "blocks");
+  ResourceManager::CreateSprite("block", "blocks", {0, 0, 0.5f, 1});
+  ResourceManager::CreateSprite("block_solid", "blocks", {0.5f, 0, 0.5f, 1});
+  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/paddle.png", "paddle");
+  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/awesomeface.png", "face");
+  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/particle.png", "particle");
 
   // Disable friction so that the ball does not lose velocity
   Engine::Settings::Physics::SetFrictionEnabled(false);
+  Engine::Settings::Graphics::SetVsyncEnabled(true);
 
   // Create all the entities
-  AddEntity("background")->AddComponent<Background>();
+  AddEntity("background", true, {}, 0, {ViewportWidth(), ViewportHeight()})->AddComponent<Background>();
   AddEntity("paddle")->AddComponent<Paddle>();
   AddEntity("ball")->AddComponent<Ball>();
 
@@ -46,12 +48,6 @@ void BrickBreaker::OnInitialize() {
 
   Engine::Input::Keyboard::ESCAPE += [this](const Engine::Input::KeyboardAndMouseContext ctx) {
     Close(ctx);
-  };
-
-  // Remove frame rate cap to test performance changes
-  Engine::Input::Keyboard::T += [this](const Engine::Input::KeyboardAndMouseContext ctx) {
-    if (ctx.pressed)
-      Engine::Settings::Graphics::SetVsyncEnabled(!Engine::Settings::Graphics::GetVsyncEnabled());
   };
 }
 

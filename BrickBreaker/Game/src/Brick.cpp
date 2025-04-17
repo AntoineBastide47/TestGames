@@ -4,10 +4,10 @@
 // Date: 15/11/2024
 //
 
-#include "Brick.hpp"
-
 #include <Engine2D/Rendering/SpriteRenderer.hpp>
+#include <Engine2D/Physics/Collider2D.hpp>
 
+#include "Brick.hpp"
 #include "BrickBreaker.hpp"
 
 void Brick::OnInitialize() {
@@ -19,7 +19,7 @@ void Brick::OnCollisionEnter2D(const std::shared_ptr<Engine2D::Physics::Collider
     lives -= 1;
     if (lives <= 0)
       Entity()->Destroy();
-    Entity()->GetComponent<Engine2D::Rendering::SpriteRenderer>()->color = GetColor(isSolid, lives);
+    Entity()->GetComponent<Engine2D::Rendering::SpriteRenderer>()->SetColor(GetColor(isSolid, lives));
   }
 }
 

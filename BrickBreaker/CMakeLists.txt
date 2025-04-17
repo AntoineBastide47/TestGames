@@ -110,7 +110,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
       -ffunction-sections -fdata-sections
       -fno-fast-math -fno-strict-aliasing -frounding-math
   )
-  target_link_options(${PROJECT_NAME} PRIVATE -Wl,-O2)
+  target_link_options(${PROJECT_NAME} PRIVATE -Wl,-O2,--gc-sections,--as-needed,--strip-all,--export-dynamic)
   set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_STRIP} $<TARGET_FILE:${PROJECT_NAME}>)
 elseif (CMAKE_BUILD_TYPE STREQUAL "Debug")
