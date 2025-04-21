@@ -6,6 +6,7 @@
 
 #include <Engine2D/Rendering/SpriteRenderer.hpp>
 #include <Engine2D/Physics/Collider2D.hpp>
+#include <Engine2D/Rendering/Camera2D.hpp>
 
 #include "Brick.hpp"
 #include "BrickBreaker.hpp"
@@ -15,6 +16,7 @@ void Brick::OnInitialize() {
 }
 
 void Brick::OnCollisionEnter2D(const std::shared_ptr<Engine2D::Physics::Collider2D> &) {
+  Engine2D::Game2D::MainCamera()->Shake(0.5f);
   if (!isSolid) {
     lives -= 1;
     if (lives <= 0)

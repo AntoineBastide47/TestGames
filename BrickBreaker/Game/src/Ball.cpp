@@ -11,6 +11,7 @@
 #include <Engine2D/Rendering/SpriteRenderer.hpp>
 #include <glm/glm.hpp>
 #include <Engine2D/Physics/Collider2D.hpp>
+#include <Engine2D/Rendering/Camera2D.hpp>
 
 #include "Ball.hpp"
 #include "BrickBreaker.hpp"
@@ -38,19 +39,22 @@ void Ball::OnInitialize() {
 
   particleSystem->startColor = glm::vec4(1, 1, 0, 1);
   particleSystem->endColor = glm::vec4(1, 1, 1, 1);
-  particleSystem->startSize = glm::vec2(2);
+  particleSystem->startScale = glm::vec2(2);
 
   particleSystem->startAngularVelocity = 360;
   particleSystem->endAngularVelocity = -360;
 
   Engine::Input::Keyboard::SPACE += [this](const Engine::Input::KeyboardAndMouseContext ctx) {
-    if (ctx.pressed && stuck) {
-      stuck = false;
-      Transform()->SetParent(nullptr);
-      rigidbody->isKinematic = false;
-      rigidbody->affectedByGravity = false;
-      rigidbody->AddForce(INITIAL_VELOCITY);
-      particleSystem->SetDuration(1);
+    if (ctx.pressed) {
+      if (stuck) {
+        stuck = false;
+        Transform()->SetParent(nullptr);
+        rigidbody->isKinematic = false;
+        rigidbody->affectedByGravity = false;
+        rigidbody->AddForce(INITIAL_VELOCITY);
+        particleSystem->SetDuration(1);
+      } else
+        Engine2D::Game2D::MainCamera()->followTarget = Engine2D::Game2D::MainCamera()->followTarget ? nullptr : Entity();
     }
   };
 }

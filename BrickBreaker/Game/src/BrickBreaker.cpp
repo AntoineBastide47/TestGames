@@ -10,6 +10,7 @@
 #include <Engine/Input/Keyboard.hpp>
 #include <Engine/Macros/Assert.hpp>
 #include <Engine2D/Rendering/SpriteRenderer.hpp>
+#include <Engine2D/Rendering/Camera2D.hpp>
 
 #include "BrickBreaker.hpp"
 #include "Ball.hpp"
@@ -37,7 +38,6 @@ void BrickBreaker::OnInitialize() {
 
   // Disable friction so that the ball does not lose velocity
   Engine::Settings::Physics::SetFrictionEnabled(false);
-  Engine::Settings::Graphics::SetVsyncEnabled(true);
 
   // Create all the entities
   AddEntity("background", true, {}, 0, {ViewportWidth(), ViewportHeight()})->AddComponent<Background>();
