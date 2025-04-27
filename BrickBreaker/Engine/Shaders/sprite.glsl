@@ -1,3 +1,4 @@
+#define TYPE VERTEX
 #version 330 core
 
 // Vertex data: position + texCoords
@@ -24,8 +25,21 @@ void main() {
 
     vec2 scaledPosition = (vertex.xy - positionAndPivot.zw) / renderOrderAndPPU.y;
     vec4 worldPosition = model * vec4(scaledPosition, 0.0, 1.0);
-    gl_Position = projection * worldPosition;
 
     TexCoords = rect.xy + vertex.zw * rect.zw;
     SpriteColor = color;
+
+    gl_Position = projection * worldPosition;
+}
+
+#define TYPE FRAGMENT
+#version 330 core
+in vec2 TexCoords;
+in vec4 SpriteColor;
+out vec4 color;
+
+uniform sampler2D sprite;
+
+void main() {
+    color = SpriteColor * texture(sprite, TexCoords);
 }

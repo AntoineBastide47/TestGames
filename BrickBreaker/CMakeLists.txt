@@ -49,7 +49,7 @@ target_include_directories(cpptrace PUBLIC
 # --------------------------
 
 if (APPLE)
-  set(CMAKE_OSX_DEPLOYMENT_TARGET "15.0")
+  set(CMAKE_OSX_DEPLOYMENT_TARGET "16.0")
   set(ENGINE_PLATFORM_LIBS "-framework CoreFoundation -framework IOKit -framework Cocoa")
 elseif (LINUX)
   message(WARNING "Linux build is not fully supported yet.")
@@ -58,6 +58,20 @@ elseif (WIN32)
 endif ()
 
 file(GLOB ENGINE_LIB ${ENGINE_LOCATION}/include/*-[0-9]*.[0-9]*.[0-9]*.*)
+if (BUILD_TYPE STREQUAL "debug")
+  set(CMAKE_BUILD_TYPE "Debug")
+  list(FILTER ENGINE_LIB INCLUDE REGEX "-[0-9]+\\.[0-9]+\\.[0-9]+d\\.[^.]+$")
+elseif (BUILD_TYPE STREQUAL "profile")
+  set(CMAKE_BUILD_TYPE "Debug")
+  list(FILTER ENGINE_LIB INCLUDE REGEX "-[0-9]+\\.[0-9]+\\.[0-9]+dp\\.[^.]+$")
+elseif (BUILD_TYPE STREQUAL "release")
+  set(CMAKE_BUILD_TYPE "Release")
+  list(FILTER ENGINE_LIB INCLUDE REGEX "-[0-9]+\\.[0-9]+\\.[0-9]+\\.[^.]+$")
+else()
+  set(CMAKE_BUILD_TYPE "Debug")
+  list(FILTER ENGINE_LIB INCLUDE REGEX "-[0-9]+\\.[0-9]+\\.[0-9]+d\\.[^.]+$")
+endif ()
+
 list(LENGTH ENGINE_LIB ENGINE_COUNT)
 if (ENGINE_COUNT EQUAL 0)
   message(FATAL_ERROR "Engine static library not found.")
@@ -110,7 +124,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
       -ffunction-sections -fdata-sections
       -fno-fast-math -fno-strict-aliasing -frounding-math
   )
-  target_link_options(${PROJECT_NAME} PRIVATE -Wl,-O2,--gc-sections,--as-needed,--strip-all,--export-dynamic)
+  target_link_options(${PROJECT_NAME} PRIVATE -Wl,-O2)
   set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_STRIP} $<TARGET_FILE:${PROJECT_NAME}>)
 elseif (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -136,8 +150,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 # --------------------------
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
-    $<$<CONFIG:Release>:ENGINE_DEBUG=0>
-    $<$<CONFIG:Debug>:ENGINE_DEBUG=1>
+    $<$<CONFIG:Debug>:GAME_DEBUG=1>
 )
 
 ########################################################################################################################

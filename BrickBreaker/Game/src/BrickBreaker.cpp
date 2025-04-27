@@ -8,9 +8,7 @@
 #include <Engine/ResourceManager.hpp>
 #include <Engine/Settings.hpp>
 #include <Engine/Input/Keyboard.hpp>
-#include <Engine/Macros/Assert.hpp>
 #include <Engine2D/Rendering/SpriteRenderer.hpp>
-#include <Engine2D/Rendering/Camera2D.hpp>
 
 #include "BrickBreaker.hpp"
 #include "Ball.hpp"
@@ -28,16 +26,21 @@ void Background::OnInitialize() {
 
 void BrickBreaker::OnInitialize() {
   // load textures
-  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/background.jpg", "background");
-  ResourceManager::LoadTexture2D("Assets/Textures/blocks.png", "blocks");
-  ResourceManager::CreateSprite("block", "blocks", {0, 0, 0.5f, 1});
-  ResourceManager::CreateSprite("block_solid", "blocks", {0.5f, 0, 0.5f, 1});
-  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/paddle.png", "paddle");
-  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/awesomeface.png", "face");
-  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/particle.png", "particle");
+  ResourceManager::LoadTexture2D("Assets/Textures/atlas.png", "atlas");
+  ResourceManager::CreateSprite("background", "atlas", false, {0.0f, 0.0f, 1.0f, 450.0f / 578.0f});
+  ResourceManager::CreateSprite("block", "atlas", false, {0.0f, 450.0f / 578.0f, 128.0f / 800.0f, 128.0f / 578.0f});
+  ResourceManager::CreateSprite(
+    "block_solid", "atlas", false, {128.0f / 800.0f, 450.0f / 578.0f, 128.0f / 800.0f, 128.0f / 578.0f}
+  );
+  ResourceManager::CreateSprite(
+    "paddle", "atlas", true, {256.0f / 800.0f, 450.0f / 578.0f, 512.0f / 800.0f, 128.0f / 578.0f}
+  );
+  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/particle.png", "particle", true);
+  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/awesomeface.png", "face", true);
 
   // Disable friction so that the ball does not lose velocity
   Engine::Settings::Physics::SetFrictionEnabled(false);
+  Engine::Settings::Profiling::SetProfilingLevel(Engine::Settings::Profiling::ProfilingLevel::PerSystem);
 
   // Create all the entities
   AddEntity("background", true, {}, 0, {ViewportWidth(), ViewportHeight()})->AddComponent<Background>();
