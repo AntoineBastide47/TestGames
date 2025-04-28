@@ -1,3 +1,8 @@
+# For macos executables: ignore all files, the keep directories and finally keep files with extentions
+**/*
+!**/*/
+!**/*.*
+
 # Prerequisites
 *.d
 
@@ -36,10 +41,7 @@
 **/compile_commands.json
 
 # other
-build_debug/*
 **/.DS_Store
 CMakeConfig.txt
-BrickBreaker
-engine-cli
 build
 profiling_data.json
