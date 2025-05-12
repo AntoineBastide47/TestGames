@@ -24,31 +24,32 @@ void Ball::OnInitialize() {
   Transform()->SetParent(BrickBreaker::Find("paddle"));
   Transform()->SetPositionRotationAndScale(glm::vec2(0, 1.35f), 0, glm::vec2(0.3f, 1.5f) * 1.1f);
 
-  // Setup the renderer
+  // Set up the renderer
   const auto renderer = Entity()->AddComponent<Engine2D::Rendering::SpriteRenderer>();
   renderer->SetSprite(Engine::ResourceManager::GetSprite("face"));
-  renderer->SetRenderOrder(1);
+  renderer->SetRenderOrder(2);
 
-  // Setup the shake coefficients for the camera
+  // Set up the shake coefficients for the camera
   const auto cam = Engine2D::Game2D::MainCamera();
   cam->shakeCoefficientsX = {{4.125f, 15.6f, 1.725f}, {1.65f, 4.2f, 3.75f}, {1.35f, 8.4f, 0.75f}};
   cam->shakeCoefficientsY = {{3, 13.2f, -1.875f}, {2.1f, 7.2f, 3}, {1.2f, 1.2f, 0.0f}};
 
-  // Setup the rigidbody
+  // Set up the rigidbody
   Entity()->AddComponent<Engine2D::Physics::CircleCollider2D>();
   rigidbody = Entity()->AddComponent<Engine2D::Physics::Rigidbody2D>();
   rigidbody->isKinematic = true;
+  rigidbody->angularDamping = 0.01f;
 
-  // Setup the particle system
+  // Set up the particle system
   particleSystem = Entity()->AddComponent<Engine2D::ParticleSystem2D>();
   particleSystem->SetSprite(Engine::ResourceManager::GetSprite("particle"));
   particleSystem->SetMaxParticles(100);
   particleSystem->loop = true;
-  particleSystem->SetDuration(0);
+  particleSystem->SetDuration(1);
   particleSystem->SetParticleLifetime(1);
   particleSystem->SetRenderOrder(1);
   particleSystem->startColor = glm::vec4(1, 1, 0, 1);
-  particleSystem->endColor = glm::vec4(1, 1, 1, 1);
+  particleSystem->endColor = glm::vec4(0, 0, 1, 1);
   particleSystem->startScale = glm::vec2(2);
   particleSystem->startAngularVelocity = 360;
   particleSystem->endAngularVelocity = -360;

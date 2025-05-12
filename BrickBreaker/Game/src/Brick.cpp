@@ -21,7 +21,8 @@ void Brick::OnCollisionEnter2D(const std::shared_ptr<Engine2D::Physics::Collider
     lives -= 1;
     if (lives <= 0)
       Entity()->Destroy();
-    Entity()->GetComponent<Engine2D::Rendering::SpriteRenderer>()->SetColor(GetColor(isSolid, lives));
+    else
+      Entity()->GetComponent<Engine2D::Rendering::SpriteRenderer>()->SetColor(GetColor(isSolid, lives));
   }
 }
 

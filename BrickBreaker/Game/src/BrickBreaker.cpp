@@ -43,7 +43,7 @@ void BrickBreaker::OnInitialize() {
   Engine::Settings::Profiling::SetProfilingLevel(Engine::Settings::Profiling::ProfilingLevel::PerSystem);
 
   // Create all the entities
-  AddEntity("background", true, {}, 0, {ViewportWidth(), ViewportHeight()})->AddComponent<Background>();
+  AddEntity("background", true, {}, 0, glm::vec2{ViewportWidth(), ViewportHeight()})->AddComponent<Background>();
   AddEntity("paddle")->AddComponent<Paddle>();
   AddEntity("ball")->AddComponent<Ball>();
 
