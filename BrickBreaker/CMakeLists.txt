@@ -9,7 +9,7 @@ project(BrickBreaker)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(ENGINE_LOCATION ../../GameEngine)
+set(ENGINE_LOCATION {{ENGINE_LOCATION}})
 include(CMakeConfig.txt OPTIONAL)
 
 # --------------------------

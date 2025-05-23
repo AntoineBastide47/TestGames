@@ -27,16 +27,12 @@ void Background::OnInitialize() {
 void BrickBreaker::OnInitialize() {
   // load textures
   ResourceManager::LoadTexture2D("Assets/Textures/atlas.png", "atlas");
-  ResourceManager::CreateSprite("background", "atlas", false, {0.0f, 0.0f, 1.0f, 450.0f / 578.0f});
-  ResourceManager::CreateSprite("block", "atlas", false, {0.0f, 450.0f / 578.0f, 128.0f / 800.0f, 128.0f / 578.0f});
-  ResourceManager::CreateSprite(
-    "block_solid", "atlas", false, {128.0f / 800.0f, 450.0f / 578.0f, 128.0f / 800.0f, 128.0f / 578.0f}
-  );
-  ResourceManager::CreateSprite(
-    "paddle", "atlas", true, {256.0f / 800.0f, 450.0f / 578.0f, 512.0f / 800.0f, 128.0f / 578.0f}
-  );
-  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/particle.png", "particle", true);
-  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/awesomeface.png", "face", true);
+  ResourceManager::CreateSprite("background", "atlas", {0.0f, 0.0f, 1.0f, 450.0f / 578.0f});
+  ResourceManager::CreateSprite("block", "atlas", {0.0f, 450.0f / 578.0f, 128.0f / 800.0f, 128.0f / 578.0f});
+  ResourceManager::CreateSprite("block_solid", "atlas", {128.0f / 800.0f, 450.0f / 578.0f, 128.0f / 800.0f, 128.0f / 578.0f});
+  ResourceManager::CreateSprite("paddle", "atlas", {256.0f / 800.0f, 450.0f / 578.0f, 512.0f / 800.0f, 128.0f / 578.0f});
+  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/particle.png", "particle");
+  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/awesomeface.png", "face");
 
   // Disable friction so that the ball does not lose velocity
   Engine::Settings::Physics::SetFrictionEnabled(false);
