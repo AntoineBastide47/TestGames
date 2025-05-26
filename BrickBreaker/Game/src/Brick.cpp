@@ -7,6 +7,7 @@
 #include <Engine2D/Rendering/SpriteRenderer.hpp>
 #include <Engine2D/Physics/Collider2D.hpp>
 #include <Engine2D/Rendering/Camera2D.hpp>
+#include <Engine/Input/Keyboard.hpp>
 
 #include "Brick.hpp"
 #include "BrickBreaker.hpp"
@@ -17,13 +18,8 @@ void Brick::OnInitialize() {
 
 void Brick::OnCollisionEnter2D(const std::shared_ptr<Engine2D::Physics::Collider2D> &) {
   Engine2D::Game2D::MainCamera()->Shake(0.5f);
-  if (!isSolid) {
-    lives -= 1;
-    if (lives <= 0)
-      Entity()->Destroy();
-    else
-      Entity()->GetComponent<Engine2D::Rendering::SpriteRenderer>()->SetColor(GetColor(isSolid, lives));
-  }
+  if (!isSolid)
+    Entity()->Destroy();
 }
 
 glm::vec4 Brick::GetColor(const bool isSolid, const int lives) {

@@ -8,7 +8,6 @@
 #define BRICK_H
 
 #include <Engine2D/Behaviour.hpp>
-#include <glm/vec4.hpp>
 
 class Brick final : public Engine2D::Behaviour {
   public:
