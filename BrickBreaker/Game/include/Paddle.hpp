@@ -8,8 +8,10 @@
 #define PADDLE_H
 
 #include <Engine2D/Behaviour.hpp>
+#include "Paddle.gen.hpp"
 
-class Paddle : public Engine2D::Behaviour {
+class Paddle final : public Engine2D::Behaviour {
+  SERIALIZE_PADDLE
   public:
     void OnInitialize() override;
 };

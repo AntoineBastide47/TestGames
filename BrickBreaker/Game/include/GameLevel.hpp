@@ -13,9 +13,9 @@
 
 class GameLevel {
   public:
-    std::shared_ptr<Engine2D::Entity2D> level;
+    Engine2D::Entity2D *level;
     // level state
-    std::vector<std::shared_ptr<Brick>> bricks;
+    std::vector<Brick *> bricks;
     // constructor
     explicit GameLevel(int index);
 };

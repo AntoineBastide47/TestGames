@@ -4,9 +4,8 @@
 // Date: 30/10/2024
 //
 
-#include <Engine2D/Game2D.hpp>
 #include <cmrc/cmrc.hpp>
-#include <string>
+#include <Engine2D/Game2D.hpp>
 
 #include "BrickBreaker.hpp"
 

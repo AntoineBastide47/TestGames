@@ -6,8 +6,8 @@
 
 #include <Engine/ResourceManager.hpp>
 #include <Engine/Input/Keyboard.hpp>
-#include <Engine2D/Rendering/SpriteRenderer.hpp>
 #include <Engine2D/Physics/Collider2D.hpp>
+#include <Engine2D/Rendering/SpriteRenderer.hpp>
 
 #include "Paddle.hpp"
 #include "BrickBreaker.hpp"
