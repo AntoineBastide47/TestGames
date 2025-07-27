@@ -6,6 +6,7 @@
 
 #include <Engine/ResourceManager.hpp>
 #include <Engine/Input/Keyboard.hpp>
+#include <Engine2D/Entity2D.hpp>
 #include <Engine2D/Physics/Collider2D.hpp>
 #include <Engine2D/Rendering/SpriteRenderer.hpp>
 

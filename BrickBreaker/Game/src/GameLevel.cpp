@@ -6,6 +6,7 @@
 
 #include <string>
 #include <Engine/ResourceManager.hpp>
+#include <Engine2D/Entity2D.hpp>
 #include <Engine2D/Rendering/SpriteRenderer.hpp>
 
 #include "GameLevel.hpp"
@@ -54,7 +55,7 @@ std::vector<std::vector<std::vector<int>>> levels = {
 };
 
 GameLevel::GameLevel(const int index) {
-  level = BrickBreaker::AddEntity("level" + std::to_string(index));
+  level = Engine2D::Entity2D::Instantiate("level" + std::to_string(index));
 
   // Calculate dimensions
   const unsigned int width = levels[index][0].size();
@@ -70,7 +71,7 @@ GameLevel::GameLevel(const int index) {
       const glm::vec2 size{unit_width, unit_height};
       const glm::vec2 pos = size * glm::vec2(x - width * 0.5f + 0.5f, height - y - 0.5f);
 
-      auto brick = BrickBreaker::AddEntity(
+      auto brick = Engine2D::Entity2D::Instantiate(
         "Brick[" + std::to_string(pos.x) + "][" + std::to_string(pos.y) + "]", true, pos, 0, size, level
       )->AddComponent<Brick>();
       brick->isSolid = levels[index][y][x] == 1;

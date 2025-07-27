@@ -9,6 +9,7 @@
 #include <Engine/Settings.hpp>
 #include <Engine/Input/Keyboard.hpp>
 #include <Engine2D/Rendering/SpriteRenderer.hpp>
+#include <Engine2D/SceneManager.hpp>
 
 #include "BrickBreaker.hpp"
 #include "Ball.hpp"
@@ -16,8 +17,11 @@
 
 using Engine::ResourceManager;
 
-BrickBreaker::BrickBreaker(): levelIndex(0) {}
-BrickBreaker::BrickBreaker(const int width, const int height) : Game2D(width, height, "Brick Breaker"), levelIndex(0) {}
+BrickBreaker::BrickBreaker()
+  : levelIndex(0) {}
+
+BrickBreaker::BrickBreaker(const int width, const int height)
+  : Game2D(width, height, "Brick Breaker"), levelIndex(0) {}
 
 void Background::OnInitialize() {
   const auto renderer = Entity()->AddComponent<Engine2D::Rendering::SpriteRenderer>();
@@ -29,25 +33,33 @@ void BrickBreaker::OnInitialize() {
   // load textures
   ResourceManager::LoadTexture2D("Assets/Textures/atlas.png", "atlas");
   ResourceManager::CreateSprite("background", "atlas", {0.0f, 0.0f, 1.0f, 450.0f / 578.0f});
-  ResourceManager::CreateSprite("block", "atlas", {0.0f, 450.0f / 578.0f, 128.0f / 800.0f, 128.0f / 578.0f})->transparent = false;
-  ResourceManager::CreateSprite("block_solid", "atlas", {128.0f / 800.0f, 450.0f / 578.0f, 128.0f / 800.0f, 128.0f / 578.0f})->transparent = false;
-  ResourceManager::CreateSprite("paddle", "atlas", {256.0f / 800.0f, 450.0f / 578.0f, 512.0f / 800.0f, 128.0f / 578.0f});
+  ResourceManager::CreateSprite(
+    "block", "atlas", {0.0f, 450.0f / 578.0f, 128.0f / 800.0f, 128.0f / 578.0f}
+  )->transparent = false;
+  ResourceManager::CreateSprite(
+    "block_solid", "atlas", {128.0f / 800.0f, 450.0f / 578.0f, 128.0f / 800.0f, 128.0f / 578.0f}
+  )->transparent = false;
+  ResourceManager::CreateSprite(
+    "paddle", "atlas", {256.0f / 800.0f, 450.0f / 578.0f, 512.0f / 800.0f, 128.0f / 578.0f}
+  );
   ResourceManager::LoadTexture2DAndSprite("Assets/Textures/particle.png", "particle");
   ResourceManager::LoadTexture2DAndSprite("Assets/Textures/awesomeface.png", "face");
 
   // Disable friction so that the ball does not lose velocity
   Engine::Settings::Profiling::SetProfilingLevel(Engine::Settings::Profiling::ProfilingLevel::PerSystem);
-  Engine::Settings::Profiling::SetProfilingThreshold(0);
+  Engine::Settings::Profiling::SetProfilingThreshold(50);
 
   // Create all the entities
-  AddEntity("background", true, {}, 0, glm::vec2{ViewportWidth(), ViewportHeight()})->AddComponent<Background>();
-  AddEntity("paddle")->AddComponent<Paddle>();
-  AddEntity("ball")->AddComponent<Ball>();
+  Engine2D::Entity2D::Instantiate("background", true, {}, 0, glm::vec2{ViewportWidth(), ViewportHeight()})
+      ->AddComponent<Background>();
+  Engine2D::Entity2D::Instantiate("paddle")->AddComponent<Paddle>();
+  Engine2D::Entity2D::Instantiate("ball")->AddComponent<Ball>();
 
   Reset();
 
   Engine::Input::Keyboard::ESCAPE += [this](const Engine::Input::KeyboardAndMouseContext ctx) {
-    Close(ctx);
+    if (ctx.pressed)
+      Quit();
   };
 }
 

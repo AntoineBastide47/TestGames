@@ -18,7 +18,7 @@ namespace Engine2D {
 class Ball final : public Engine2D::Behaviour {
   SERIALIZE_BALL
   public:
-    inline static glm::vec2 INITIAL_VELOCITY = glm::vec2(3, 12) * 100.0f;
+    inline static glm::vec2 INITIAL_VELOCITY = glm::vec2(1.4f, 12) * 100.0f;
     bool stuck = true;
 
     Ball();
