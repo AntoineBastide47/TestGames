@@ -3,15 +3,16 @@
 // Author: Antoine Bastide
 // Date: 20/11/2024
 //
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
 
 #include <Engine/ResourceManager.hpp>
-#include <Engine/Settings.hpp>
 #include <Engine/Input/Keyboard.hpp>
-#include <Engine2D/SceneManager.hpp>
 #include <Engine2D/ParticleSystem/ParticleSystem2D.hpp>
 #include <Engine2D/Physics/Collider2D.hpp>
 #include <Engine2D/Rendering/Camera2D.hpp>
 #include <Engine2D/Rendering/SpriteRenderer.hpp>
+#include <Engine2D/SceneManagement/SceneManager.hpp>
 
 #include "Ball.hpp"
 #include "BrickBreaker.hpp"
@@ -20,7 +21,7 @@ Ball::Ball()
   : rigidbody(nullptr), particleSystem(nullptr) {}
 
 void Ball::OnInitialize() {
-  Transform()->SetParent(Engine2D::Entity2D::Find("paddle"));
+  Transform()->SetParent(Engine2D::SceneManager::ActiveScene()->Find("paddle"));
   Transform()->SetPositionRotationAndScale(glm::vec2(0, 1.35f), 0, glm::vec2(0.3f, 1.5f) * 1.1f);
 
   // Set up the renderer
@@ -29,7 +30,7 @@ void Ball::OnInitialize() {
   renderer->SetRenderOrder(2);
 
   // Set up the shake coefficients for the camera
-  const auto cam = Engine2D::Scene::MainCamera();
+  const auto cam = Engine2D::SceneManager::ActiveScene()->MainCamera();
   cam->shakeCoefficientsX = {{4.125f, 15.6f, 1.725f}, {1.65f, 4.2f, 3.75f}, {1.35f, 8.4f, 0.75f}};
   cam->shakeCoefficientsY = {{3, 13.2f, -1.875f}, {2.1f, 7.2f, 3}, {1.2f, 1.2f, 0.0f}};
 
@@ -53,17 +54,21 @@ void Ball::OnInitialize() {
   particleSystem->startScale = glm::vec2(2);
   particleSystem->startAngularVelocity = 360;
   particleSystem->endAngularVelocity = -360;
+}
 
-  Engine::Input::Keyboard::SPACE += [this](const Engine::Input::KeyboardAndMouseContext ctx) {
-    if (ctx.pressed && stuck) {
-      stuck = false;
-      Transform()->SetParent(nullptr);
-      rigidbody->isKinematic = false;
-      rigidbody->affectedByGravity = false;
-      rigidbody->AddForce(INITIAL_VELOCITY);
-      particleSystem->SetDuration(2);
+void Ball::OnBindInput() {
+  Entity()->AddInputCallback(
+    Engine::Input::Keyboard::SPACE, [this](const Engine::Input::KeyboardAndMouseContext ctx) {
+      if (ctx.pressed && stuck) {
+        stuck = false;
+        Transform()->SetParent(nullptr);
+        rigidbody->isKinematic = false;
+        rigidbody->affectedByGravity = false;
+        rigidbody->AddForce(glm::vec2(1.4f, 12) * 100.0f);
+        particleSystem->SetDuration(2);
+      }
     }
-  };
+  );
 }
 
 void Ball::OnUpdate() {
@@ -92,6 +97,11 @@ void Ball::OnUpdate() {
 
   particleSystem->startVelocity = -rigidbody->linearVelocity * 0.5f;
   particleSystem->endVelocity = rigidbody->linearVelocity * 0.5f;
+}
+
+void Ball::OnDeserialize(Engine::Reflection::Format format, const Engine::JSON &json) {
+  rigidbody = Entity()->GetComponent<Engine2D::Physics::Rigidbody2D>();
+  particleSystem = Entity()->GetComponent<Engine2D::ParticleSystem2D>();
 }
 
 void Ball::Reset() {

@@ -4,12 +4,12 @@
 // Date: 02/11/2024
 //
 
-#include <Engine2D/Entity2D.hpp>
 #include <Engine/ResourceManager.hpp>
 #include <Engine/Settings.hpp>
 #include <Engine/Input/Keyboard.hpp>
+#include <Engine2D/Entity2D.hpp>
 #include <Engine2D/Rendering/SpriteRenderer.hpp>
-#include <Engine2D/SceneManager.hpp>
+#include <Engine2D/SceneManagement/SceneManager.hpp>
 
 #include "BrickBreaker.hpp"
 #include "Ball.hpp"
@@ -30,8 +30,11 @@ void Background::OnInitialize() {
 }
 
 void BrickBreaker::OnInitialize() {
+  Engine2D::SceneManager::CreateScene("SceneManager");
+  Engine2D::SceneManager::SetActiveScene("SceneManager");
+
   // load textures
-  ResourceManager::LoadTexture2D("Assets/Textures/atlas.png", "atlas");
+  ResourceManager::LoadTexture2D("atlas", "Assets/Textures/atlas.png");
   ResourceManager::CreateSprite("background", "atlas", {0.0f, 0.0f, 1.0f, 450.0f / 578.0f});
   ResourceManager::CreateSprite(
     "block", "atlas", {0.0f, 450.0f / 578.0f, 128.0f / 800.0f, 128.0f / 578.0f}
@@ -42,8 +45,8 @@ void BrickBreaker::OnInitialize() {
   ResourceManager::CreateSprite(
     "paddle", "atlas", {256.0f / 800.0f, 450.0f / 578.0f, 512.0f / 800.0f, 128.0f / 578.0f}
   );
-  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/particle.png", "particle");
-  ResourceManager::LoadTexture2DAndSprite("Assets/Textures/awesomeface.png", "face");
+  ResourceManager::LoadTexture2DAndSprite("particle", "Assets/Textures/particle.png");
+  ResourceManager::LoadTexture2DAndSprite("face", "Assets/Textures/awesomeface.png");
 
   // Disable friction so that the ball does not lose velocity
   Engine::Settings::Profiling::SetProfilingLevel(Engine::Settings::Profiling::ProfilingLevel::PerSystem);

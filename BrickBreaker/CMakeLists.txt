@@ -9,8 +9,8 @@ project(BrickBreaker)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(ENGINE_LOCATION {{ENGINE_LOCATION}})
-include(CMakeConfig.txt OPTIONAL)
+set(ENGINE_LOCATION ../../GameEngine)
+set(ENGINE_LOCATION ${ENGINE_LOCATION}/SDK) # Temporary change until full engine sdk creation
 
 # --------------------------
 # Dependencies
@@ -63,7 +63,7 @@ elseif (WIN32)
     message(WARNING "Windows build is not fully supported yet.")
 endif ()
 
-file(GLOB ENGINE_LIB ${ENGINE_LOCATION}/include/*-[0-9]*.[0-9]*.[0-9]*.*)
+file(GLOB ENGINE_LIB ${ENGINE_LOCATION}/*-[0-9]*.[0-9]*.[0-9]*.*)
 if (BUILD_TYPE STREQUAL "debug")
     set(CMAKE_BUILD_TYPE "Debug")
     list(FILTER ENGINE_LIB INCLUDE REGEX "-[0-9]+\\.[0-9]+\\.[0-9]+d\\.[^.]+$")
@@ -103,7 +103,6 @@ add_executable(${PROJECT_NAME} main.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${ENGINE_LOCATION}/include Game/include)
-
 target_link_libraries(${PROJECT_NAME} PUBLIC
     ${ENGINE_PLATFORM_LIBS} ${ENGINE_LIB}
     GLEW::GLEW glfw cpptrace::cpptrace glm

@@ -21,7 +21,7 @@ class Background final : public Engine2D::Behaviour {
 
 class BrickBreaker final : public Engine2D::Game2D {
   public:
-    ENGINE_NON_SERIALIZABLE std::vector<GameLevel> levels;
+    std::vector<GameLevel> levels;
     int levelIndex;
 
     BrickBreaker();

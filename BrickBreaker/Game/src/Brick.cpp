@@ -4,9 +4,9 @@
 // Date: 15/11/2024
 //
 
-#include <Engine2D/SceneManager.hpp>
 #include <Engine2D/Physics/Collider2D.hpp>
 #include <Engine2D/Rendering/Camera2D.hpp>
+#include <Engine2D/SceneManagement/SceneManager.hpp>
 
 #include "Brick.hpp"
 #include "BrickBreaker.hpp"
@@ -16,7 +16,7 @@ void Brick::OnInitialize() {
 }
 
 void Brick::OnCollisionEnter2D(const Engine2D::Physics::Collider2D *) {
-  //Engine2D::Scene::MainCamera()->Shake(0.5f);
+  Engine2D::SceneManager::ActiveScene()->MainCamera()->Shake(0.5f);
   if (!isSolid)
     Entity()->Destroy();
 }

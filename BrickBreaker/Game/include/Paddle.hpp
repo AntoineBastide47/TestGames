@@ -14,6 +14,7 @@ class Paddle final : public Engine2D::Behaviour {
   SERIALIZE_PADDLE
   public:
     void OnInitialize() override;
+    void OnBindInput() override;
 };
 
 #endif //PADDLE_H

@@ -11,11 +11,13 @@ namespace Engine::Reflection {
   void _e_save(const Engine::Reflection::Format format, Engine::JSON &json) const override { \
     if (format == Engine::Reflection::Format::JSON) { \
       json = Engine::JSON::Object();\
+      Engine::Reflection::_e_saveImpl(active, format, json["active"]);\
       Engine::Reflection::_e_saveImpl(stuck, format, json["stuck"]);\
     }\
   }\
   void _e_load(const Engine::Reflection::Format format, const Engine::JSON &json) override { \
     if (format == Engine::Reflection::Format::JSON) { \
+      Engine::Reflection::_e_loadImpl(active, format, json["active"]);\
       Engine::Reflection::_e_loadImpl(stuck, format, json["stuck"]);\
     }\
   }\
